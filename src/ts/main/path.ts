@@ -12,20 +12,26 @@ export class Link {
 export class Path {
     readonly links: Link[];
 
-    constructor(links: Link[]) {
-        this.links = links;
+    constructor(str: string) {
+        this.links = parse(str);
+    }
+
+    isEmpty(): boolean {
+        return 0 == this.links.length;
     }
 }
 
-export const parse = (str: string): Path => {
+function parse(str: string): Link[] {
     let links = [];
-    if (str) {
-        let steps = str.split('.');
-        for(let step of steps) {
-            let parts = step.split('@');
-            let link = new Link(parts[0], parts[1]);
-            links.push(link);
-        }
+    if (!str) {
+        return links;
     }
-    return new Path(links);
+
+    let steps = str.split('.');
+    for(let step of steps) {
+        let parts = step.split('@');
+        let link = new Link(parts[0], parts[1]);
+        links.push(link);
+    }
+    return links;
 }
