@@ -1,5 +1,6 @@
 import { Cache, Entity } from '../main/cache';
 import { Path } from '../main/path';
+import { Patch } from '../main/patch';
 
 import { Request, State } from '../main/state';
 
@@ -84,15 +85,15 @@ describe('Check Cache class', () => {
         expect(actual).to.be.equal(value);
     });
 
-    it('functions evaluatePath("type:1", new Path("ref@type.value")) should return field value', () => {
+    it('functions evaluatePath("type:1", new Path("ref_id.value")) should return field value', () => {
         // Setup
         const cache = new Cache();
         const id1 = "type:1";
         const id2 = "type:2";
         const value = "Hello World";
-        cache.set({id: id1, ref: id2});
+        cache.set({id: id1, ref_id: id2});
         cache.set({id: id2, value});
-        const path = new Path("ref@type.value");
+        const path = new Path("ref_id.value");
 
         // Execute
         const actual: any = cache.evaluatePath(id1, path);
@@ -101,17 +102,17 @@ describe('Check Cache class', () => {
         expect(actual).to.be.equal(value);
     });
 
-    it('functions evaluatePath("type:1", new Path("ref@type.ref@type.value")) should return field value', () => {
+    it('functions evaluatePath("type:1", new Path("ref_id.ref_id.value")) should return field value', () => {
         // Setup
         const cache = new Cache();
         const id1 = "type:1";
         const id2 = "type:2";
         const id3 = "type:3";
         const value = "Hello World";
-        cache.set({id: id1, ref: id2});
-        cache.set({id: id2, ref: id3});
+        cache.set({id: id1, ref_id: id2});
+        cache.set({id: id2, ref_id: id3});
         cache.set({id: id3, value});
-        const path = new Path("ref@type.ref@type.value");
+        const path = new Path("ref_id.ref_id.value");
 
         // Execute
         const actual: any = cache.evaluatePath(id1, path);
@@ -120,7 +121,7 @@ describe('Check Cache class', () => {
         expect(actual).to.be.equal(value);
     });
 
-    it('functions evaluatePath("type:1", new Path("^ref@type.value")) should return array of fields', () => {
+    it('functions evaluatePath("type:1", new Path("^ref_id.value")) should return array of fields', () => {
         // Setup
         const cache = new Cache();
         const id1 = "type:1";
@@ -132,11 +133,11 @@ describe('Check Cache class', () => {
         const value2 = "World";
         const value3 = "!";
 
-        cache.set({id: id1, "^ref": [id2, id3, id4]});
+        cache.set({id: id1, "^ref_id": [id2, id3, id4]});
         cache.set({id: id2, value: value1});
         cache.set({id: id3, value: value2});
         cache.set({id: id4, value: value3});
-        const path = new Path("^ref@type.value");
+        const path = new Path("^ref_id.value");
 
         // Execute
         const actual: any = cache.evaluatePath(id1, path);
@@ -148,7 +149,7 @@ describe('Check Cache class', () => {
         expect(actual.length).to.be.equal(3);
     });
 
-    it('functions evaluatePath("type:1", new Path("^ref1@type.^ref2@type.value")) should return array of fields', () => {
+    it('functions evaluatePath("type:1", new Path("^ref1_id.^ref2_id.value")) should return array of fields', () => {
         // Setup
         const cache = new Cache();
         const id1 = "type:1";
@@ -160,12 +161,12 @@ describe('Check Cache class', () => {
         const value1 = "Hello";
         const value2 = "World";
 
-        cache.set({id: id1, "^ref1": [id2, id3]});
-        cache.set({id: id2, "^ref2": [id4, id5]});
-        cache.set({id: id3, "^ref2": [id4, id5]});
+        cache.set({id: id1, "^ref1_id": [id2, id3]});
+        cache.set({id: id2, "^ref2_id": [id4, id5]});
+        cache.set({id: id3, "^ref2_id": [id4, id5]});
         cache.set({id: id4, value: value1});
         cache.set({id: id5, value: value2});
-        const path = new Path("^ref1@type.^ref2@type.value");
+        const path = new Path("^ref1_id.^ref2_id.value");
 
         // Execute
         const actual: any = cache.evaluatePath(id1, path);
@@ -182,7 +183,7 @@ describe('Check Cache class', () => {
         const id2 = "type:2";
         const id3 = "type:3";
 
-        cache.set({id: id1, "ref1": id2, "ref2": [id2, id3]});
+        cache.set({id: id1, "ref1_id": id2, "ref2_id": [id2, id3]});
         cache.set({id: id2, "str": "Hello"});
         cache.set({id: id3, "str": "World"});
 
@@ -190,14 +191,14 @@ describe('Check Cache class', () => {
             $id: null,
             num: 123,
             str: "Hi!",
-            str1: new Path("ref1.str"),
-            str2: new Path("ref2.str"),
+            str1: new Path("ref1_id.str"),
+            str2: new Path("ref2_id.str"),
             sub1: {
-                $id: new Path("ref1"),
+                $id: new Path("ref1_id"),
                 str3: new Path("str")
             },
             sub2: {
-                $id: new Path("ref2"),
+                $id: new Path("ref2_id"),
                 str4: new Path("str")
             }
         };
@@ -226,4 +227,35 @@ describe('Check Cache class', () => {
         // Verify
         expect(actual).to.deep.equals(expected);
     });
+
+    it('functions applyPatch({...}) should update Cache correctly', () => {
+        // Setup
+        const cache = new Cache();
+        const id1 = "type:1";
+        const id2 = "type:2";
+        const id3 = "type:3";
+        const id4 = "type:4";
+
+        cache.set({id: id1, "ref1_id": id2, "^ref2_id": [id2, id3]});
+        cache.set({id: id2, "^ref1_id": id1, "ref2_id": id1, "str": "Hello"});
+        cache.set({id: id3, "^ref1_id": null, "ref2_id": id1, "str": "World"});
+
+        const patch: Patch = {
+            insert: [{id: id4, "^ref1_id": null, "ref2_id": id1, "str": "!"}],
+            update: [{id: id1, "ref1_id": id3}, {id: id3, "str": "Hi"}],
+            delete: [id2]
+        };
+        const expected_id1 = {id: id1, "ref1_id": id3, "^ref2_id": [id3, id4]};
+        const expected_id3 = {id: id3, "^ref1_id": id1, "ref2_id": id1, "str": "Hi"};
+        const expected_id4 = {id: id4, "^ref1_id": null, "ref2_id": id1, "str": "!"};
+
+        // Execute
+        cache.applyPatch(patch);
+
+        expect(cache.get(id1)).to.deep.equals(expected_id1);
+        expect(cache.get(id2)).to.be.undefined;
+        expect(cache.get(id3)).to.deep.equals(expected_id3);
+        expect(cache.get(id4)).to.deep.equals(expected_id4);
+    });
+
 });

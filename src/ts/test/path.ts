@@ -19,55 +19,46 @@ describe('Check Path class', () => {
 
         // Verify
         expect(scalar.links[0].field).to.be.equal("date");
-        expect(scalar.links[0].target).to.be.null;
         expect(scalar.links.length).to.be.equal(1);
     });
 
-    it('functions new Path("ref@Type") should work correctly', () => {
+    it('functions new Path("ref_id") should work correctly', () => {
         // Execute
-        const scalar = new Path("ref@Type");
+        const scalar = new Path("ref_id");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref");
-        expect(scalar.links[0].target).to.be.equal("Type");
+        expect(scalar.links[0].field).to.be.equal("ref_id");
         expect(scalar.links.length).to.be.equal(1);
     });
 
-    it('functions new Path("ref@Type.float") should work correctly', () => {
+    it('functions new Path("ref_id.float") should work correctly', () => {
         // Execute
-        const scalar = new Path("ref@Type.float");
+        const scalar = new Path("ref_id.float");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref");
-        expect(scalar.links[0].target).to.be.equal("Type");
+        expect(scalar.links[0].field).to.be.equal("ref_id");
         expect(scalar.links[1].field).to.be.equal("float");
-        expect(scalar.links[1].target).to.be.null;
         expect(scalar.links.length).to.be.equal(2);
     });
 
-    it('functions new Path("ref1@Type1.^ref2@Type2") should work correctly', () => {
+    it('functions new Path("ref1_id.^ref2_id") should work correctly', () => {
         // Execute
-        const scalar = new Path("ref1@Type1.^ref2@Type2");
+        const scalar = new Path("ref1_id.^ref2_id");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref1");
-        expect(scalar.links[0].target).to.be.equal("Type1");
-        expect(scalar.links[1].field).to.be.equal("^ref2");
-        expect(scalar.links[1].target).to.be.equal("Type2");
+        expect(scalar.links[0].field).to.be.equal("ref1_id");
+        expect(scalar.links[1].field).to.be.equal("^ref2_id");
         expect(scalar.links.length).to.be.equal(2);
     });
 
-    it('functions new Path("ref1@Type1.^ref2@Type2.string") should work correctly', () => {
+    it('functions new Path("ref1_id.^ref2_id.string") should work correctly', () => {
         // Execute
-        const scalar = new Path("ref1@Type1.^ref2@Type2.string");
+        const scalar = new Path("ref1_id.^ref2_id.string");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref1");
-        expect(scalar.links[0].target).to.be.equal("Type1");
-        expect(scalar.links[1].field).to.be.equal("^ref2");
-        expect(scalar.links[1].target).to.be.equal("Type2");
+        expect(scalar.links[0].field).to.be.equal("ref1_id");
+        expect(scalar.links[1].field).to.be.equal("^ref2_id");
         expect(scalar.links[2].field).to.be.equal("string");
-        expect(scalar.links[2].target).to.be.null;
         expect(scalar.links.length).to.be.equal(3);
     });
 

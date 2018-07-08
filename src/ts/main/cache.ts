@@ -1,4 +1,5 @@
 import {Path} from "./path";
+import {Patch} from "./patch";
 import * as State from "./state";
 
 export interface Entity {
@@ -25,12 +26,14 @@ export class Cache {
         this.storage[entity.id] = entity;
     }
 
-    public remove(entity: Entity) {
-        delete this.storage[entity.id];
+    public remove(entity: Entity): Entity {
+        return this.removeById(entity.id);
     }
 
-    public removeById(id: string) {
+    public removeById(id: string): Entity {
+        const entity = this.storage[id];
         delete this.storage[id];
+        return entity;
     }
 
     public evaluatePath(id: string, path: Path): any {
@@ -54,7 +57,6 @@ export class Cache {
     private evaluatePathArray(ids: any[], field: string): any[] {
         let aggregate = [];
         for(const id of ids) {
-            console.log("aggregate: " + JSON.stringify(aggregate));
             if (typeof id !== 'string') {
                 continue;
             }
@@ -69,7 +71,6 @@ export class Cache {
                 continue;
             }
         }
-        console.log("aggregate: " + JSON.stringify(aggregate));
         return aggregate;
     }
 
@@ -112,5 +113,115 @@ export class Cache {
             }
         }
         return state;
+    }
+
+    public applyPatch(patch: Patch) {
+        if (null != patch.insert) {
+            for (const entity of patch.insert) {
+                this.applyPatchInsert(entity);
+            }
+        }
+        if (null != patch.update) {
+            for (const entity of patch.update) {
+                this.applyPatchUpdate(entity);
+            }
+        }
+        if (null != patch.delete) {
+            for (const entityId of patch.delete) {
+                this.applyPatchDelete(entityId);
+            }
+        }
+    }
+
+    private applyPatchInsert(entity: Entity) {
+        this.set(entity);
+        for (const field in entity) {
+            if (this.isReference(field) && !this.isReverse(field)) {
+                this.appendReverse(field, entity.id, entity[field]);
+            }
+        }
+    }
+
+    private applyPatchUpdate(update: Entity) {
+        let cached = this.get(update.id);
+        if (null == cached) {
+            return;
+        }
+
+        for (const field in update) {
+            if ("id" == field || this.isReverse(field)) {
+                continue;
+            }
+            const oldValue = cached[field];
+            const newValue = update[field];
+            if (oldValue == newValue) {
+                continue;
+            }
+            if (this.isReference(field)) {
+                this.removeReverse(field, update.id, oldValue);
+                cached[field] = newValue;
+                this.appendReverse(field, update.id, newValue);
+            } else {
+                cached[field] = newValue;
+            }
+        }
+    }
+
+    private applyPatchDelete(id: string) {
+        const entity = this.removeById(id);
+        if (null == entity) {
+            return;
+        }
+
+        for (const field in entity) {
+            if (this.isReference(field) && !this.isReverse(field)) {
+                this.removeReverse(field, id, entity[field]);
+            }
+        }
+    }
+
+    private isReference(field: string): boolean {
+        return 3 < field.length && "_id" == field.substring(field.length - 3);
+    }
+
+    private isReverse(field: string): boolean {
+        return 1 < field.length && field.charAt(0) == "^";
+    }
+
+    private appendReverse(field: string, sourceId: string, targetId: string) {
+        let target = this.get(targetId);
+        if (null == target) {
+            return;
+        }
+        const reverse = "^" + field;
+        const value = target[reverse];
+        if (undefined === value) {
+            return;
+        }
+        if (Array.isArray(value)) {
+            value.push(sourceId);
+        } else {
+            target[reverse] = sourceId;
+        }
+    }
+
+    private removeReverse(field: string, sourceId: string, targetId: string) {
+        let target = this.get(targetId);
+        if (null == target) {
+            return;
+        }
+        const reverse = "^" + field;
+        const value = target[reverse];
+        if (undefined === value) {
+            return;
+        }
+        if (Array.isArray(value)) {
+            const index = value.indexOf(sourceId);
+            if (index >= 0) {
+                value.splice(index, 1);
+            }
+        } else if (target[reverse] == sourceId) {
+            target[reverse] = null;
+        }
     }
 }

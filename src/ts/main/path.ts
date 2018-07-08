@@ -1,11 +1,9 @@
 
 export class Link {
     readonly field: string;
-    readonly target: string;
 
-    constructor(field: string, target?: string) {
+    constructor(field: string) {
         this.field = field;
-        this.target = target || null;
     }
 }
 
@@ -29,8 +27,7 @@ function parse(str: string): Link[] {
 
     let steps = str.split('.');
     for(let step of steps) {
-        let parts = step.split('@');
-        let link = new Link(parts[0], parts[1]);
+        let link = new Link(step);
         links.push(link);
     }
     return links;
