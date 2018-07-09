@@ -13,9 +13,11 @@ export interface Storage {
 
 export class Cache {
     storage: Storage;
+    idGenerator: number;
 
     public constructor() {
         this.storage = {};
+        this.idGenerator = 0;
     }
 
     public get(id: string): Entity {
@@ -26,14 +28,14 @@ export class Cache {
         this.storage[entity.id] = entity;
     }
 
-    public remove(entity: Entity): Entity {
-        return this.removeById(entity.id);
-    }
-
-    public removeById(id: string): Entity {
+    public remove(id: string): Entity {
         const entity = this.storage[id];
         delete this.storage[id];
         return entity;
+    }
+
+    public clear() {
+        this.storage = {};
     }
 
     public evaluatePath(id: string, path: Path): any {
@@ -168,7 +170,7 @@ export class Cache {
     }
 
     private applyPatchDelete(id: string) {
-        const entity = this.removeById(id);
+        const entity = this.remove(id);
         if (null == entity) {
             return;
         }
@@ -223,5 +225,13 @@ export class Cache {
         } else if (target[reverse] == sourceId) {
             target[reverse] = null;
         }
+    }
+
+    public generateId(type: string): string {
+        return type + ":~" + ++this.idGenerator;
+    }
+
+    public resetIdGenerator(): void {
+        this.idGenerator = 0;
     }
 }

@@ -26,7 +26,7 @@ describe('Check Cache class', () => {
         expect(actual2).to.equal(entity2);
     });
 
-    it('functions remove() and removeById() should work correctly', () => {
+    it('functions remove() should work correctly', () => {
         // Setup
         const cache = new Cache();
         const entity1: Entity = {id: "e:1"};
@@ -36,12 +36,12 @@ describe('Check Cache class', () => {
         cache.set(entity2);
 
         // Execute
-        cache.remove(entity1);
-        cache.removeById(entity2.id);
+        const actual = cache.remove(entity1.id);
 
         // Verify
+        expect(actual).to.be.equal(entity1);
         expect(cache.get(entity1.id)).to.be.undefined;
-        expect(cache.get(entity2.id)).to.be.undefined;
+        expect(cache.get(entity2.id)).to.be.equal(entity2);
     });
 
     it('functions evaluatePath("unknown, new Path("value")) should return null', () => {
