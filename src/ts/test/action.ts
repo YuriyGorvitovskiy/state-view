@@ -15,27 +15,29 @@ describe('Check Cache class', () => {
     const create_new_story_after_link = "create_new_story_after_link";
     processor.register({
         id: create_new_story_after_link,
-        ctx: {
-            $id: null,
-            action_id: new Path("action_id"),
-            release_id: new Path("release_id"),
-            release_ix: new Path("release_ix"),
-            project_id: new Path("release_id.project_id")
+        parameters: {
+            after: {
+                $id: null,
+                action_id: new Path("action_id"),
+                release_id: new Path("release_id"),
+                release_ix: new Path("release_ix"),
+                project_id: new Path("release_id.project_id")
+            }
         },
-        process: (ctx, param, processor) => {
-            const story_id = processor.generateId("story");
-            const link_id = processor.generateId("action_release_story");
+        process: (parameters, idGenerator) => {
+            const story_id = idGenerator("story");
+            const link_id = idGenerator("action_release_story");
             return {
                 insert: [{
                     id: story_id,
-                    name: param.name,
-                    project_id: ctx.project_id
+                    name: parameters.name,
+                    project_id: parameters.after.project_id
                 },
                 {
                     id: link_id,
-                    action_id: ctx.action_id,
-                    release_id: ctx.release_id,
-                    release_ix: ctx.release_ix + 1,
+                    action_id: parameters.after.action_id,
+                    release_id: parameters.after.release_id,
+                    release_ix: parameters.after.release_ix + 1,
                     story_id: story_id,
                 }
             ]};
@@ -44,48 +46,39 @@ describe('Check Cache class', () => {
     const rename_story = "rename_story";
     processor.register({
         id: rename_story,
-        ctx: {
-            $id: null,
-        },
-        process: (ctx, param, processor) => {
-            return {update: [{id: ctx.$id, name: param.name}]};
+        parameters: {},
+        process: (parameters) => {
+            return {update: [{id: parameters.id, name: parameters.name}]};
         }
     });
 
     const move_link = "move_link";
     processor.register({
         id: move_link,
-        ctx: {
-            $id: null,
-            story_id: new Path("story_id"),
-            links: {
-                $id: new Path("release_id.^release_id"),
+        parameters: {
+            from: {
+                $id: null,
+                story_id: new Path("story_id")
+            },
+            after: {
+                $id: null,
                 action_id: new Path("action_id"),
                 release_id: new Path("release_id"),
-                release_ix: new Path("release_ix")
+                release_ix: new Path("release_ix"),
+                project_id: new Path("release_id.project_id")
             }
         },
-        process: (ctx, param, processor) => {
-            const link_id = processor.generateId("action_release_story");
-            let linkTo = null;
-            for (const link of ctx.links) {
-                if (link.$id == param.after_id) {
-                    linkTo = link;
-                    break;
-                }
-            }
-            if (null == linkTo) {
-                return {};
-            }
+        process: (parameters, idGenerator) => {
+            const link_id = idGenerator("action_release_story");
             return {
                 insert: [{
                     id: link_id,
-                    action_id: linkTo.action_id,
-                    release_id: linkTo.release_id,
-                    release_ix: linkTo.release_ix + 1,
-                    story_id: ctx.story_id
+                    action_id: parameters.after.action_id,
+                    release_id: parameters.after.release_id,
+                    release_ix: parameters.after.release_ix + 1,
+                    story_id: parameters.from.story_id
                 }],
-                delete: [ctx.$id]
+                delete: [parameters.from.$id]
             };
         }
     });
@@ -93,12 +86,14 @@ describe('Check Cache class', () => {
     const remove_link = "remove_link";
     processor.register({
         id: remove_link,
-        ctx: {
-            $id: null,
-            story_id: new Path("story_id")
+        parameters: {
+            link: {
+                $id: null,
+                story_id: new Path("story_id")
+            }
         },
-        process: (ctx, param, processor) => {
-            return {delete: [ctx.$id, ctx.story_id]};
+        process: (parameters) => {
+            return {delete: [parameters.link.$id, parameters.link.story_id]};
         }
     });
 
@@ -185,14 +180,23 @@ describe('Check Cache class', () => {
         const action1_id = "create_new_entity";
         processor.register({
             id: action1_id,
-            ctx: {$id: null},
-            process: (ctx, param) => {
-                return {insert: [{id: param.id, ref_id: ctx.$id, name: param.name}]};
+            parameters: {
+                ref_id: {$id: null}
+            },
+            process: (parameters) => {
+                return {insert: [{id: parameters.id, ref_id: parameters.ref_id.$id, name: parameters.name}]};
             }
         });
 
         // Execute
-        processor.execute({id: action1_id, ctx: id1, param: {id: id2, name: "Hello World!"}});
+        processor.execute({
+            id: action1_id,
+            parameters: {
+                id: id2,
+                ref_id: id1,
+                name: "Hello World!"
+            }
+        });
 
         // Verify
         expect(cache.get(id1)).to.be.deep.equal({id: id1, "^ref_id":[id2]});
@@ -209,8 +213,10 @@ describe('Check Cache class', () => {
         // Execute
         processor.execute({
             id: create_new_story_after_link,
-            ctx: action1_release1_story1_id,
-            param: {name: "New Story"}
+            parameters: {
+                after: action1_release1_story1_id,
+                name: "New Story"
+            }
         });
 
         // Verify
@@ -239,8 +245,10 @@ describe('Check Cache class', () => {
         // Execute
         processor.execute({
             id: rename_story,
-            ctx: story1_id,
-            param: {name: "Story Renamed"}
+            parameters: {
+                id: story1_id,
+                name: "Story Renamed"
+            }
         });
 
         // Verify
@@ -261,8 +269,10 @@ describe('Check Cache class', () => {
         // Execute
         processor.execute({
             id: move_link,
-            ctx: action1_release1_story1_id,
-            param: {after_id: action2_release1_story2_id}
+            parameters: {
+                from: action1_release1_story1_id,
+                after: action2_release1_story2_id
+            }
         });
 
         // Verify
@@ -289,8 +299,9 @@ describe('Check Cache class', () => {
         // Execute
         processor.execute({
             id: remove_link,
-            ctx: action1_release1_story1_id,
-            param: {}
+            parameters: {
+                link: action1_release1_story1_id,
+            }
         });
 
         // Verify

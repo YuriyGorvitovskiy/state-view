@@ -8,17 +8,21 @@ export interface Param {
 
 export interface Action {
     id: string;
-    ctx: string;
-    param: Param;
+    parameters: Param;
 }
 
-export interface Description {
-    id: string;
-    ctx: State.Request;
-    process: (ctx: State.State, param: Param, processor: Processor) => Patch;
+export interface ParamDescription {
+    [key: string]: State.Request;
 }
+
+export interface ActionDescription {
+    id: string;
+    parameters: ParamDescription;
+    process: (params: Param, idGenerator: (type: string) => string) => Patch;
+}
+
 export interface Registry {
-    [key: string]: Description;
+    [key: string]: ActionDescription;
 }
 
 export class Processor {
@@ -30,25 +34,23 @@ export class Processor {
         this.regestry = {};
     }
 
-    public register(desc: Description) {
+    public register(desc: ActionDescription) {
         this.regestry[desc.id] = desc;
     }
 
-    public execute(action: Action): Description {
+    public execute(action: Action): void {
         const desc = this.regestry[action.id];
         if (null == desc) {
             return;
         }
-        let contexts: State.State[] = [];
-        if (null != desc.ctx) {
-            contexts = [].concat(this.cache.evaluateState(action.ctx, desc.ctx));
+        let parameters: Param = {};
+        for (const key in action.parameters) {
+            parameters[key] = action.parameters[key];
+            const request: State.Request = desc.parameters[key];
+            if (null != request) {
+                parameters[key] = this.cache.evaluateState(parameters[key], request);
+            }
         }
-        for (let ctx of contexts) {
-            this.cache.applyPatch(desc.process(ctx, action.param, this));
-        }
-    }
-
-    public generateId(type: string): string {
-        return this.cache.generateId(type);
+        this.cache.applyPatch(desc.process(parameters, this.cache.generateId.bind(this.cache)));
     }
 }
