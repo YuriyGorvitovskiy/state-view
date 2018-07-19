@@ -3,26 +3,25 @@ import {Cache} from "./cache";
 import * as State from "./state";
 
 export interface Param {
-    [key: string]: any;
 }
 
-export interface Action {
+export interface Event<P extends Param> {
+    action_id: string;
+    param: Param;
+}
+
+export type Request<P extends Param> = {
+    [K in keyof P]?: State.Request;
+}
+
+export interface Action<P extends Param> {
     id: string;
-    parameters: Param;
-}
-
-export interface ParamDescription {
-    [key: string]: State.Request;
-}
-
-export interface ActionDescription {
-    id: string;
-    parameters: ParamDescription;
-    process: (params: Param, idGenerator: (type: string) => string) => Patch;
+    request: Request<P>;
+    process: (param: P, newIdFor: (type: string) => string) => Patch;
 }
 
 export interface Registry {
-    [key: string]: ActionDescription;
+    [id: string]: Action<any>;
 }
 
 export class Processor {
@@ -34,23 +33,23 @@ export class Processor {
         this.regestry = {};
     }
 
-    public register(desc: ActionDescription) {
-        this.regestry[desc.id] = desc;
+    public register<P>(action: Action<P>) {
+        this.regestry[action.id] = action;
     }
 
-    public execute(action: Action): void {
-        const desc = this.regestry[action.id];
-        if (null == desc) {
+    public execute<P>(event: Event<P>): void {
+        const action = this.regestry[event.action_id];
+        if (null == action) {
             return;
         }
         let parameters: Param = {};
-        for (const key in action.parameters) {
-            parameters[key] = action.parameters[key];
-            const request: State.Request = desc.parameters[key];
+        for (const key in event.param) {
+            parameters[key] = event.param[key];
+            const request: State.Request = action.request[key];
             if (null != request) {
                 parameters[key] = this.cache.evaluateState(parameters[key], request);
             }
         }
-        this.cache.applyPatch(desc.process(parameters, this.cache.generateId.bind(this.cache)));
+        this.cache.applyPatch(action.process(parameters, this.cache.generateId.bind(this.cache)));
     }
 }

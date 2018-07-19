@@ -13,9 +13,13 @@ describe('Check Cache class', () => {
     const processor = new Action.Processor(cache);
 
     const create_new_story_after_link = "create_new_story_after_link";
-    processor.register({
+    interface ParamA extends Action.Param {
+        after: any;
+        name: string;
+    };
+    processor.register<ParamA>({
         id: create_new_story_after_link,
-        parameters: {
+        request: {
             after: {
                 $id: null,
                 action_id: new Path("action_id"),
@@ -24,38 +28,46 @@ describe('Check Cache class', () => {
                 project_id: new Path("release_id.project_id")
             }
         },
-        process: (parameters, idGenerator) => {
-            const story_id = idGenerator("story");
-            const link_id = idGenerator("action_release_story");
+        process: (param: ParamA, newIdFor) => {
+            const story_id = newIdFor("story");
+            const link_id = newIdFor("action_release_story");
             return {
                 insert: [{
                     id: story_id,
-                    name: parameters.name,
-                    project_id: parameters.after.project_id
+                    name: param.name,
+                    project_id: param.after.project_id
                 },
                 {
                     id: link_id,
-                    action_id: parameters.after.action_id,
-                    release_id: parameters.after.release_id,
-                    release_ix: parameters.after.release_ix + 1,
+                    action_id: param.after.action_id,
+                    release_id: param.after.release_id,
+                    release_ix: param.after.release_ix + 1,
                     story_id: story_id,
                 }
             ]};
         }
     });
     const rename_story = "rename_story";
-    processor.register({
+    interface ParamB extends Action.Param {
+        id: any;
+        name: string;
+    };
+    processor.register<ParamB>({
         id: rename_story,
-        parameters: {},
-        process: (parameters) => {
-            return {update: [{id: parameters.id, name: parameters.name}]};
+        request: {},
+        process: (param) => {
+            return {update: [{id: param.id, name: param.name}]};
         }
     });
 
     const move_link = "move_link";
-    processor.register({
+    interface ParamC extends Action.Param {
+        from: any;
+        after: any;
+    };
+    processor.register<ParamC>({
         id: move_link,
-        parameters: {
+        request: {
             from: {
                 $id: null,
                 story_id: new Path("story_id")
@@ -68,25 +80,29 @@ describe('Check Cache class', () => {
                 project_id: new Path("release_id.project_id")
             }
         },
-        process: (parameters, idGenerator) => {
-            const link_id = idGenerator("action_release_story");
+        process: (param, newIdFor) => {
+            const link_id = newIdFor("action_release_story");
             return {
                 insert: [{
                     id: link_id,
-                    action_id: parameters.after.action_id,
-                    release_id: parameters.after.release_id,
-                    release_ix: parameters.after.release_ix + 1,
-                    story_id: parameters.from.story_id
+                    action_id: param.after.action_id,
+                    release_id: param.after.release_id,
+                    release_ix: param.after.release_ix + 1,
+                    story_id: param.from.story_id
                 }],
-                delete: [parameters.from.$id]
+                delete: [param.from.$id]
             };
         }
     });
 
     const remove_link = "remove_link";
-    processor.register({
+    interface ParamD extends Action.Param {
+        link: any;
+    };
+
+    processor.register<ParamD>({
         id: remove_link,
-        parameters: {
+        request: {
             link: {
                 $id: null,
                 story_id: new Path("story_id")
@@ -176,22 +192,27 @@ describe('Check Cache class', () => {
         const id2 = "type:2";
         cache.set({id: id1, "^ref_id": []});
 
+        interface Param extends Action.Param {
+            id: string;
+            ref_id: any;
+            name: string;
+        };
         const processor = new Action.Processor(cache);
         const action1_id = "create_new_entity";
-        processor.register({
+        processor.register<Param>({
             id: action1_id,
-            parameters: {
+            request: {
                 ref_id: {$id: null}
             },
-            process: (parameters) => {
-                return {insert: [{id: parameters.id, ref_id: parameters.ref_id.$id, name: parameters.name}]};
+            process: (param) => {
+                return {insert: [{id: param.id, ref_id: param.ref_id.$id, name: param.name}]};
             }
         });
 
         // Execute
-        processor.execute({
-            id: action1_id,
-            parameters: {
+        processor.execute<Param>({
+            action_id: action1_id,
+            param: {
                 id: id2,
                 ref_id: id1,
                 name: "Hello World!"
@@ -211,9 +232,9 @@ describe('Check Cache class', () => {
         createProjectHerarchy();
 
         // Execute
-        processor.execute({
-            id: create_new_story_after_link,
-            parameters: {
+        processor.execute<ParamA>({
+            action_id: create_new_story_after_link,
+            param: {
                 after: action1_release1_story1_id,
                 name: "New Story"
             }
@@ -243,9 +264,9 @@ describe('Check Cache class', () => {
         createProjectHerarchy();
 
         // Execute
-        processor.execute({
-            id: rename_story,
-            parameters: {
+        processor.execute<ParamB>({
+            action_id: rename_story,
+            param: {
                 id: story1_id,
                 name: "Story Renamed"
             }
@@ -267,9 +288,9 @@ describe('Check Cache class', () => {
         createProjectHerarchy();
 
         // Execute
-        processor.execute({
-            id: move_link,
-            parameters: {
+        processor.execute<ParamC>({
+            action_id: move_link,
+            param: {
                 from: action1_release1_story1_id,
                 after: action2_release1_story2_id
             }
@@ -297,9 +318,9 @@ describe('Check Cache class', () => {
         createProjectHerarchy();
 
         // Execute
-        processor.execute({
-            id: remove_link,
-            parameters: {
+        processor.execute<ParamD>({
+            action_id: remove_link,
+            param: {
                 link: action1_release1_story1_id,
             }
         });
