@@ -8,7 +8,7 @@ import {Patch} from '../main/patch';
 import { expect } from 'chai';
 import 'mocha';
 
-describe('Check Cache class', () => {
+describe('Check Action class', () => {
     const cache = new Cache();
     const processor = new Action.Processor(cache);
 
@@ -134,7 +134,7 @@ describe('Check Cache class', () => {
             name: "Release",
             project_id: project_id,
             project_ix: 1,
-            "^release_id": [action1_release1_story1_id, action2_release1_story2_id]
+            "^action_release_story:release_id": [action1_release1_story1_id, action2_release1_story2_id]
         });
         cache.set({
             id: storyboard_id,
@@ -190,7 +190,7 @@ describe('Check Cache class', () => {
         const cache = new Cache();
         const id1 = "type:1";
         const id2 = "type:2";
-        cache.set({id: id1, "^ref_id": []});
+        cache.set({id: id1, "^type:ref_id": []});
 
         interface Param extends Action.Param {
             id: string;
@@ -220,7 +220,7 @@ describe('Check Cache class', () => {
         });
 
         // Verify
-        expect(cache.get(id1)).to.be.deep.equal({id: id1, "^ref_id":[id2]});
+        expect(cache.get(id1)).to.be.deep.equal({id: id1, "^type:ref_id":[id2]});
         expect(cache.get(id2)).to.be.deep.equal({id: id2, ref_id: id1, name: "Hello World!"});
     });
 
@@ -307,7 +307,7 @@ describe('Check Cache class', () => {
             story_id: "story:1"
         });
         expect(cache.get(story1_id)).to.be.not.undefined;
-        expect(cache.get(release1_id)["^release_id"]).to.be.deep.equal([action2_release1_story2_id, "action_release_story:~1"]);
+        expect(cache.get(release1_id)["^action_release_story:release_id"]).to.be.deep.equal([action2_release1_story2_id, "action_release_story:~1"]);
     });
 
     it('function execute("remove_link") should work correctly', () => {

@@ -41,23 +41,23 @@ describe('Check Path class', () => {
         expect(scalar.links.length).to.be.equal(2);
     });
 
-    it('functions new Path("ref1_id.^ref2_id") should work correctly', () => {
+    it('functions new Path("ref1_id.^type:ref2_id") should work correctly', () => {
         // Execute
-        const scalar = new Path("ref1_id.^ref2_id");
+        const scalar = new Path("ref1_id.^type:ref2_id");
 
         // Verify
         expect(scalar.links[0].field).to.be.equal("ref1_id");
-        expect(scalar.links[1].field).to.be.equal("^ref2_id");
+        expect(scalar.links[1].field).to.be.equal("^type:ref2_id");
         expect(scalar.links.length).to.be.equal(2);
     });
 
-    it('functions new Path("ref1_id.^ref2_id.string") should work correctly', () => {
+    it('functions new Path("ref1_id.^type:ref2_id.string") should work correctly', () => {
         // Execute
-        const scalar = new Path("ref1_id.^ref2_id.string");
+        const scalar = new Path("ref1_id.^type:ref2_id.string");
 
         // Verify
         expect(scalar.links[0].field).to.be.equal("ref1_id");
-        expect(scalar.links[1].field).to.be.equal("^ref2_id");
+        expect(scalar.links[1].field).to.be.equal("^type:ref2_id");
         expect(scalar.links[2].field).to.be.equal("string");
         expect(scalar.links.length).to.be.equal(3);
     });

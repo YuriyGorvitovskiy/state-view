@@ -195,7 +195,8 @@ export class Cache {
         if (null == target) {
             return;
         }
-        const reverse = "^" + field;
+        let sourceType = sourceId.substring(0, sourceId.indexOf(":"));
+        const reverse = "^" + sourceType + ":" + field;
         const value = target[reverse];
         if (undefined === value) {
             return;
@@ -212,7 +213,8 @@ export class Cache {
         if (null == target) {
             return;
         }
-        const reverse = "^" + field;
+        let sourceType = sourceId.substring(0, sourceId.indexOf(":"));
+        const reverse = "^" + sourceType + ":" + field;
         const value = target[reverse];
         if (undefined === value) {
             return;

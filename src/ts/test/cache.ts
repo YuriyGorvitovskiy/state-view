@@ -121,7 +121,7 @@ describe('Check Cache class', () => {
         expect(actual).to.be.equal(value);
     });
 
-    it('functions evaluatePath("type:1", new Path("^ref_id.value")) should return array of fields', () => {
+    it('functions evaluatePath("type:1", new Path("^type:ref_id.value")) should return array of fields', () => {
         // Setup
         const cache = new Cache();
         const id1 = "type:1";
@@ -133,11 +133,11 @@ describe('Check Cache class', () => {
         const value2 = "World";
         const value3 = "!";
 
-        cache.set({id: id1, "^ref_id": [id2, id3, id4]});
+        cache.set({id: id1, "^type:ref_id": [id2, id3, id4]});
         cache.set({id: id2, value: value1});
         cache.set({id: id3, value: value2});
         cache.set({id: id4, value: value3});
-        const path = new Path("^ref_id.value");
+        const path = new Path("^type:ref_id.value");
 
         // Execute
         const actual: any = cache.evaluatePath(id1, path);
@@ -149,7 +149,7 @@ describe('Check Cache class', () => {
         expect(actual.length).to.be.equal(3);
     });
 
-    it('functions evaluatePath("type:1", new Path("^ref1_id.^ref2_id.value")) should return array of fields', () => {
+    it('functions evaluatePath("type:1", new Path("^type:ref1_id.^type:ref2_id.value")) should return array of fields', () => {
         // Setup
         const cache = new Cache();
         const id1 = "type:1";
@@ -161,12 +161,12 @@ describe('Check Cache class', () => {
         const value1 = "Hello";
         const value2 = "World";
 
-        cache.set({id: id1, "^ref1_id": [id2, id3]});
-        cache.set({id: id2, "^ref2_id": [id4, id5]});
-        cache.set({id: id3, "^ref2_id": [id4, id5]});
+        cache.set({id: id1, "^type:ref1_id": [id2, id3]});
+        cache.set({id: id2, "^type:ref2_id": [id4, id5]});
+        cache.set({id: id3, "^type:ref2_id": [id4, id5]});
         cache.set({id: id4, value: value1});
         cache.set({id: id5, value: value2});
-        const path = new Path("^ref1_id.^ref2_id.value");
+        const path = new Path("^type:ref1_id.^type:ref2_id.value");
 
         // Execute
         const actual: any = cache.evaluatePath(id1, path);
@@ -236,18 +236,18 @@ describe('Check Cache class', () => {
         const id3 = "type:3";
         const id4 = "type:4";
 
-        cache.set({id: id1, "ref1_id": id2, "^ref2_id": [id2, id3]});
-        cache.set({id: id2, "^ref1_id": id1, "ref2_id": id1, "str": "Hello"});
-        cache.set({id: id3, "^ref1_id": null, "ref2_id": id1, "str": "World"});
+        cache.set({id: id1, "ref1_id": id2, "^type:ref2_id": [id2, id3]});
+        cache.set({id: id2, "^type:ref1_id": id1, "ref2_id": id1, "str": "Hello"});
+        cache.set({id: id3, "^type:ref1_id": null, "ref2_id": id1, "str": "World"});
 
         const patch: Patch = {
-            insert: [{id: id4, "^ref1_id": null, "ref2_id": id1, "str": "!"}],
+            insert: [{id: id4, "^type:ref1_id": null, "ref2_id": id1, "str": "!"}],
             update: [{id: id1, "ref1_id": id3}, {id: id3, "str": "Hi"}],
             delete: [id2]
         };
-        const expected_id1 = {id: id1, "ref1_id": id3, "^ref2_id": [id3, id4]};
-        const expected_id3 = {id: id3, "^ref1_id": id1, "ref2_id": id1, "str": "Hi"};
-        const expected_id4 = {id: id4, "^ref1_id": null, "ref2_id": id1, "str": "!"};
+        const expected_id1 = {id: id1, "ref1_id": id3, "^type:ref2_id": [id3, id4]};
+        const expected_id3 = {id: id3, "^type:ref1_id": id1, "ref2_id": id1, "str": "Hi"};
+        const expected_id4 = {id: id4, "^type:ref1_id": null, "ref2_id": id1, "str": "!"};
 
         // Execute
         cache.applyPatch(patch);
