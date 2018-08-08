@@ -88,6 +88,8 @@ export class Cache {
         let resolvedIds: string | string[] = id;
         if (request.$id instanceof Path) {
             resolvedIds = this.evaluatePath(id, request.$id);
+        } else if (typeof(request.$id) == "string") {
+            resolvedIds = request.$id;
         }
 
         if (Array.isArray(resolvedIds)) {
@@ -110,6 +112,17 @@ export class Cache {
                 state[key] = this.evaluatePath(id, request[key] as Path);
             } else if (typeof request[key] == 'object' && '$id' in request[key]) {
                 state[key] = this.evaluateState(id, request[key]);
+            } else if (Array.isArray(request[key])) {
+                state[key] = [];
+                for (const indx in request[key]) {
+                    if (request[key][indx] instanceof Path) {
+                        state[key][indx] = this.evaluatePath(id, request[key][indx] as Path);
+                    } else if (typeof request[key][indx] == 'object' && '$id' in request[key][indx]) {
+                        state[key][indx] = this.evaluateState(id, request[key][indx]);
+                    } else {
+                        state[key][indx] = request[key][indx];
+                    }
+                }
             } else {
                 state[key] = request[key];
             }

@@ -9,7 +9,7 @@ import 'mocha';
 
 describe('Check View class', () => {
     const cache = new Cache();
-    const list1_id = "list:3";
+    const list1_id = "list:1";
     const item1_id = "item:1";
     const item2_id = "item:2";
     const item3_id = "item:3";
