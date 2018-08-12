@@ -1,3 +1,5 @@
+
+
 export interface Path<T> {
     $path: string,
 };
@@ -32,15 +34,15 @@ export function mapping<T>(p: string): Mapping<any, T> {
 };
 
 
-export type Field<R, T> = T | Path<T> | Function<R, T>;
-export type MappedField<F, R, T> = T | Path<T> | Function<R, T> | Mapping<F, T>;
+export type WidgetField<R, T> = T | Path<T> | Function<R, T>;
+export type ActionField<F, R, T> = T | Path<T> | Function<R, T> | Mapping<F, T>;
 
 export type Single<T> = T | T & Request;
 export type Plural<T> = T[] | (T & Request)[] | T & RequestArray;
 
-export interface Widget<T> {
+export interface Widget<P> {
     $widget: string,
-    $prop: Single<T>,
+    $prop: Single<P>,
 };
 
 export interface Action<E, P> {
@@ -49,7 +51,7 @@ export interface Action<E, P> {
 }
 
 export interface Value<P> {
-    value: Field<Value<P>, P>;
+    value: WidgetField<Value<P>, P>;
 }
 
 export interface ValueEditable<P> extends Value<P> {
@@ -57,12 +59,12 @@ export interface ValueEditable<P> extends Value<P> {
 }
 
 export interface Column {
-    column_id: Field<Column, string>;
+    column_id: WidgetField<Column, string>;
     widget: Single<Widget<any>>;
 }
 
 export interface Item {
-    column_id: Field<Item, string>;
+    column_id: WidgetField<Item, string>;
     widget: Single<Widget<any>>;
 }
 
@@ -76,8 +78,8 @@ export interface Table {
 }
 
 export interface ChangeAttribute<F, T> {
-    attr:  MappedField<F, ChangeAttribute<F, T>, string>;
-    value: MappedField<F, ChangeAttribute<F, T>, T>;
+    attr:  ActionField<F, ChangeAttribute<F, T>, string>;
+    value: ActionField<F, ChangeAttribute<F, T>, T>;
 }
 
 export function stringWidget(prop: Value<string>): Widget<Value<string>> {
@@ -146,10 +148,22 @@ const TABLE: Widget<Table> = tableWidget({
             })
         },{
             column_id: "boolean",
-            widget: booleanEditWidget({value: path("boolean")})
+            widget: booleanEditWidget({
+                value: path("boolean"),
+                edit: changeAttributeAction({
+                    attr: "boolean",
+                    value: mapping("value")
+                })
+            })
         },{
             column_id: "number",
-            widget: numberEditWidget({value: path("number")})
+            widget: numberEditWidget({
+                value: path("number"),
+                edit: changeAttributeAction({
+                    attr: "number",
+                    value: mapping("value")
+                })
+            })
         }]
     }
 });
