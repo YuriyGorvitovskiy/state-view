@@ -10,7 +10,6 @@ export interface Storage {
     [key: string]: Entity;
 }
 
-
 export class Cache {
     storage: Storage;
     idGenerator: number;

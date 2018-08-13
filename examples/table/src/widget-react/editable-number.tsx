@@ -1,11 +1,8 @@
 import * as React from "react";
 
-import * as Action from "../state-machine/action";
-import * as Widget from "../state-machine/widget";
+import * as Editable from "./editable";
 
-import * as Abstract from "./edit-abstract";
-
-export class Component extends Abstract.Component<number> {
+export class Component extends Editable.Component<number> {
 
     calculateValue(str: string): number {
         let value = Number(str);

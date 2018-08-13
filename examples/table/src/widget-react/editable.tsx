@@ -2,17 +2,17 @@ import * as React from "react";
 
 import * as Action from "../state-machine/action";
 import * as Widget from "../state-machine/widget";
+import * as Editable from "../state-machine/widget/editable";
 
-export type Props<T> = Widget.ValueEditableProp<T>;
+export type Props<T> = Editable.Props<T>;
 
 export interface State {
     edit: boolean;
     value: string;
 }
 
-export abstract class Component<T>
-                    extends React.Component<Props<T>, State>
-                    implements Widget.Component<Props<T>> {
+export abstract class Component<T> extends React.Component<Props<T>, State>
+                                implements Widget.Component<Props<T>> {
     input: any;
 
     constructor(props: Readonly<Props<T>>) {
@@ -72,7 +72,7 @@ export abstract class Component<T>
             return;
         }
         this.setState({edit}, () => this.setState({value: this.calculateString(this.state.edit, this.props.value)}));
-        let actionProp = { ...this.props.edit.$prop};
+        let actionProp = { ...this.props.edit.$params};
         actionProp.value = value;
         Action.fire(this.props.edit.$action, actionProp);
     }

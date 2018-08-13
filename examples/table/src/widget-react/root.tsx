@@ -4,11 +4,13 @@ import * as Cache from "../state-machine/cache";
 import * as Widget from "../state-machine/widget";
 
 
-export interface State extends Widget.Widget<any> {
+export interface State extends Widget.Request<any> {
     $id: string;
 }
 
-export class Component extends React.Component<{}, State> implements Widget.RootComponent {
+export class Component extends React.Component<{}, State>
+                    implements Widget.RootComponent {
+
     constructor(prop: any) {
         super(prop);
         let view = Cache.CACHE.get(Component.getParameterByName("view"));
@@ -18,8 +20,8 @@ export class Component extends React.Component<{}, State> implements Widget.Root
     }
 
     render() {
-        let prop = Cache.CACHE.evaluateState(this.state.$id, this.state.$prop);
-        return Widget.CONFIG.registry[this.state.$widget](prop) as React.ReactElement<any>;
+        let prop = Cache.CACHE.evaluateState(this.state.$id, this.state.$props);
+        return Widget.REGISTRY[this.state.$widget](prop) as React.ReactElement<any>;
     }
 
     refresh() {

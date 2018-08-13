@@ -1,31 +1,30 @@
 import {CACHE} from "./cache";
 import {Patch} from "./patch";
-import {Function, Path, Single, Field} from "./request";
-import {CONFIG, ValueReq, ValueProp} from "./widget";
+import {Single} from "./request";
+import {ROOT} from "./widget";
 
-export interface ActionReq<P> {
+export interface Request<P> {
     $action: string,
-    $prop: Single<P>,
+    $params: Single<P>,
 }
 
-export interface ActionProp<P> {
-    $action: string,
-    $prop: P,
+export interface Event<P> {
+    $action: string;
+    $params: P;
 }
 
-export type ActionFunction<P> = (prop: P) => Patch;
+export type Execute<P> = (params: P) => Patch;
+export const REGISTRY: {[action: string]: Execute<any>} = {};
 
-export const REGISTRY: {[action: string]: ActionFunction<any>} = {};
-
-export function fire<P>(action: string, prop: P) {
-    let actionFunction  = REGISTRY[action];
-    if (null == actionFunction) {
+export function fire<P>(action: string, params: any) {
+    let execute  = REGISTRY[action];
+    if (null == execute) {
         return;
     }
-    let patch: Patch = actionFunction(prop);
+    let patch: Patch = execute(params);
     if (null == patch) {
         return;
     }
     CACHE.applyPatch(patch);
-    CONFIG.root.refresh();
+    ROOT.refresh();
 }
