@@ -3,9 +3,6 @@ import * as Registry from "./data/table/registry";
 import * as Widget from "./data/table/widget";
 import * as View from "./data/table/view";
 
-import { expect } from 'chai';
-import 'mocha';
-
 describe('Check Table implementation', () => {
     Registry.Widgets.BOOLEAN_WIDGET = Widget.BooleanWidget;
     Registry.Widgets.NUMBER_WIDGET = Widget.NumberWidget;
@@ -24,7 +21,7 @@ describe('Check Table implementation', () => {
         const actual = generateWidget(Data.list1_id, View.TABLE_VIEW());
 
         // Verify
-        expect(actual.render()).to.be.equal(
+        expect(actual.render()).toEqual(
             "<tbl><head>"
                 +"<col><str>Name</str></col>"
                 +"<col><str>Boolean</str></col>"

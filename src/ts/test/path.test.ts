@@ -1,6 +1,3 @@
-import 'mocha';
-import { expect } from 'chai';
-
 import {Path} from '../main/path';
 
 describe('Check Path class', () => {
@@ -10,7 +7,7 @@ describe('Check Path class', () => {
         const empty = new Path("");
 
         // Verify
-        expect(empty.links).to.be.empty;
+        expect(empty.links).toHaveLength(0);
     });
 
     it('functions new Path("date") should work correctly', () => {
@@ -18,8 +15,8 @@ describe('Check Path class', () => {
         const scalar = new Path("date");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("date");
-        expect(scalar.links.length).to.be.equal(1);
+        expect(scalar.links[0].field).toEqual("date");
+        expect(scalar.links).toHaveLength(1);
     });
 
     it('functions new Path("ref_id") should work correctly', () => {
@@ -27,8 +24,8 @@ describe('Check Path class', () => {
         const scalar = new Path("ref_id");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref_id");
-        expect(scalar.links.length).to.be.equal(1);
+        expect(scalar.links[0].field).toEqual("ref_id");
+        expect(scalar.links).toHaveLength(1);
     });
 
     it('functions new Path("ref_id.float") should work correctly', () => {
@@ -36,9 +33,9 @@ describe('Check Path class', () => {
         const scalar = new Path("ref_id.float");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref_id");
-        expect(scalar.links[1].field).to.be.equal("float");
-        expect(scalar.links.length).to.be.equal(2);
+        expect(scalar.links[0].field).toEqual("ref_id");
+        expect(scalar.links[1].field).toEqual("float");
+        expect(scalar.links).toHaveLength(2);
     });
 
     it('functions new Path("ref1_id.^type:ref2_id") should work correctly', () => {
@@ -46,9 +43,9 @@ describe('Check Path class', () => {
         const scalar = new Path("ref1_id.^type:ref2_id");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref1_id");
-        expect(scalar.links[1].field).to.be.equal("^type:ref2_id");
-        expect(scalar.links.length).to.be.equal(2);
+        expect(scalar.links[0].field).toEqual("ref1_id");
+        expect(scalar.links[1].field).toEqual("^type:ref2_id");
+        expect(scalar.links).toHaveLength(2);
     });
 
     it('functions new Path("ref1_id.^type:ref2_id.string") should work correctly', () => {
@@ -56,10 +53,10 @@ describe('Check Path class', () => {
         const scalar = new Path("ref1_id.^type:ref2_id.string");
 
         // Verify
-        expect(scalar.links[0].field).to.be.equal("ref1_id");
-        expect(scalar.links[1].field).to.be.equal("^type:ref2_id");
-        expect(scalar.links[2].field).to.be.equal("string");
-        expect(scalar.links.length).to.be.equal(3);
+        expect(scalar.links[0].field).toEqual("ref1_id");
+        expect(scalar.links[1].field).toEqual("^type:ref2_id");
+        expect(scalar.links[2].field).toEqual("string");
+        expect(scalar.links).toHaveLength(3);
     });
 
     it('functions new Path(null).isEmpty() should return true', () => {
@@ -70,7 +67,7 @@ describe('Check Path class', () => {
         const actual = path.isEmpty();
 
         // Verify
-        expect(actual).to.be.true;
+        expect(actual).toBeTruthy();
     });
     it('functions new Path("").isEmpty() should return true', () => {
         // Setup
@@ -80,7 +77,7 @@ describe('Check Path class', () => {
         const actual = path.isEmpty();
 
         // Verify
-        expect(actual).to.be.true;
+        expect(actual).toBeTruthy();
     });
 
     it('functions new Path("field").isEmpty() should return false', () => {
@@ -91,6 +88,6 @@ describe('Check Path class', () => {
         const actual = path.isEmpty();
 
         // Verify
-        expect(actual).to.be.false;
+        expect(actual).toBeFalsy();
     });
 });

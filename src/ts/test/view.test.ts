@@ -3,10 +3,6 @@ import {Path} from '../main/path';
 import {View} from "../main/View";
 import {Prop, Widget} from "../main/widget";
 
-
-import { expect } from 'chai';
-import 'mocha';
-
 describe('Check View class', () => {
     const cache = new Cache();
     const list1_id = "list:1";
@@ -100,7 +96,7 @@ describe('Check View class', () => {
         const actual = generateWidget(item1_id, item_view);
 
         // Verify
-        expect(actual.render()).to.be.deep.equal("<li>Item 1</li>");
+        expect(actual.render()).toEqual("<li>Item 1</li>");
     });
 
     it('list_view renders correctly', () => {
@@ -108,6 +104,6 @@ describe('Check View class', () => {
         const actual = generateWidget(list1_id, list_view);
 
         // Verify
-        expect(actual.render()).to.be.deep.equal("<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>");
+        expect(actual.render()).toEqual("<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>");
     });
 });

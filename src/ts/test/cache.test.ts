@@ -4,9 +4,6 @@ import { Patch } from '../main/patch';
 
 import { Request, State } from '../main/state';
 
-import { expect } from 'chai';
-import 'mocha';
-
 describe('Check Cache class', () => {
 
     it('functions set() and get() should work correctly', () => {
@@ -22,8 +19,8 @@ describe('Check Cache class', () => {
         const actual2 = cache.get(entity2.id);
 
         // Verify
-        expect(actual1).to.equal(entity1);
-        expect(actual2).to.equal(entity2);
+        expect(actual1).toEqual(entity1);
+        expect(actual2).toEqual(entity2);
     });
 
     it('functions remove() should work correctly', () => {
@@ -39,9 +36,9 @@ describe('Check Cache class', () => {
         const actual = cache.remove(entity1.id);
 
         // Verify
-        expect(actual).to.be.equal(entity1);
-        expect(cache.get(entity1.id)).to.be.undefined;
-        expect(cache.get(entity2.id)).to.be.equal(entity2);
+        expect(actual).toEqual(entity1);
+        expect(cache.get(entity1.id)).toBeUndefined();
+        expect(cache.get(entity2.id)).toEqual(entity2);
     });
 
     it('functions evaluatePath("unknown, new Path("value")) should return null', () => {
@@ -53,7 +50,7 @@ describe('Check Cache class', () => {
         const actual: any = cache.evaluatePath("unknown", path);
 
         // Execute
-        expect(actual).to.be.undefined;
+        expect(actual).toBeUndefined();
     });
 
     it('functions evaluatePath("type:1", new Path("")) should return null', () => {
@@ -67,7 +64,7 @@ describe('Check Cache class', () => {
         const actual: any = cache.evaluatePath(id, path);
 
         // Execute
-        expect(actual).to.be.equal(id);
+        expect(actual).toEqual(id);
     });
 
     it('functions evaluatePath("type:1", new Path("value")) should return field value', () => {
@@ -82,7 +79,7 @@ describe('Check Cache class', () => {
         const actual: any = cache.evaluatePath(id, path);
 
         // Verify
-        expect(actual).to.be.equal(value);
+        expect(actual).toEqual(value);
     });
 
     it('functions evaluatePath("type:1", new Path("ref_id.value")) should return field value', () => {
@@ -99,7 +96,7 @@ describe('Check Cache class', () => {
         const actual: any = cache.evaluatePath(id1, path);
 
         // Verify
-        expect(actual).to.be.equal(value);
+        expect(actual).toEqual(value);
     });
 
     it('functions evaluatePath("type:1", new Path("ref_id.ref_id.value")) should return field value', () => {
@@ -118,7 +115,7 @@ describe('Check Cache class', () => {
         const actual: any = cache.evaluatePath(id1, path);
 
         // Verify
-        expect(actual).to.be.equal(value);
+        expect(actual).toEqual(value);
     });
 
     it('functions evaluatePath("type:1", new Path("^type:ref_id.value")) should return array of fields', () => {
@@ -143,10 +140,10 @@ describe('Check Cache class', () => {
         const actual: any = cache.evaluatePath(id1, path);
 
         // Verify
-        expect(actual).to.contain(value1);
-        expect(actual).to.contain(value2);
-        expect(actual).to.contain(value3);
-        expect(actual.length).to.be.equal(3);
+        expect(actual).toContain(value1);
+        expect(actual).toContain(value2);
+        expect(actual).toContain(value3);
+        expect(actual.length).toEqual(3);
     });
 
     it('functions evaluatePath("type:1", new Path("^type:ref1_id.^type:ref2_id.value")) should return array of fields', () => {
@@ -172,9 +169,9 @@ describe('Check Cache class', () => {
         const actual: any = cache.evaluatePath(id1, path);
 
         // Verify
-        expect(actual).to.contain(value1);
-        expect(actual).to.contain(value2);
-        expect(actual.length).to.be.equal(4);
+        expect(actual).toContain(value1);
+        expect(actual).toContain(value2);
+        expect(actual.length).toEqual(4);
     });
     it('functions evaluateState("type:1", {...}) should return correct State', () => {
         // Setup
@@ -225,7 +222,7 @@ describe('Check Cache class', () => {
         const actual = cache.evaluateState(id1, request);
 
         // Verify
-        expect(actual).to.deep.equals(expected);
+        expect(actual).toEqual(expected);
     });
 
     it('functions applyPatch({...}) should update Cache correctly', () => {
@@ -252,10 +249,10 @@ describe('Check Cache class', () => {
         // Execute
         cache.applyPatch(patch);
 
-        expect(cache.get(id1)).to.deep.equals(expected_id1);
-        expect(cache.get(id2)).to.be.undefined;
-        expect(cache.get(id3)).to.deep.equals(expected_id3);
-        expect(cache.get(id4)).to.deep.equals(expected_id4);
+        expect(cache.get(id1)).toEqual(expected_id1);
+        expect(cache.get(id2)).toBeUndefined();
+        expect(cache.get(id3)).toEqual(expected_id3);
+        expect(cache.get(id4)).toEqual(expected_id4);
     });
 
 });
