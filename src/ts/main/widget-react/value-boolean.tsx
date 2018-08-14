@@ -6,6 +6,6 @@ import * as ValueBoolean from "../widget/value-boolean";
 export class Component extends React.Component<ValueBoolean.Props, {}>
                     implements Widget.Component<ValueBoolean.Props> {
     render() {
-        return <span>{null == this.props.value ? null : this.props.value ? "✅" : "❎"}</span>;
+        return <span>{null == this.props.value ? null : this.props.value ? "\u2705" : "\u2B55"}</span>;
     }
 };

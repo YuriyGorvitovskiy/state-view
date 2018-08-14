@@ -8,7 +8,7 @@ import * as EditableBoolean from "../widget/editable-boolean";
 export class Component extends React.Component<EditableBoolean.Props, {}>
                     implements Widget.Component<EditableBoolean.Props> {
     render() {
-        return <span onClick={(e)=>this.onClick(e)}>{null == this.props.value ? null : this.props.value ? "\u2705" : "\u274E"}</span>;
+        return <span onClick={(e)=>this.onClick(e)}>{null == this.props.value ? null : this.props.value ? "\u2705" : "\u2B55"}</span>;
     }
 
     onClick(ev: React.MouseEvent) {
