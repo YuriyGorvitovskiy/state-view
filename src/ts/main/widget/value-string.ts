@@ -1,4 +1,4 @@
-import * as Widget from "../widget";
+import * as Widget from "../state-machine/widget";
 import * as Value from "./value";
 
 export type Request = Value.Request<string>;

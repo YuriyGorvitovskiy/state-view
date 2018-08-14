@@ -2,7 +2,7 @@ import * as React from "react";
 
 import * as Action from "../state-machine/action";
 import * as Widget from "../state-machine/widget";
-import * as Editable from "../state-machine/widget/editable";
+import * as Editable from "../widget/editable";
 
 export type Props<T> = Editable.Props<T>;
 

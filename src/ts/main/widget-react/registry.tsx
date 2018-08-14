@@ -3,13 +3,13 @@ import * as ReactDOM from "react-dom";
 
 import * as Widget from "../state-machine/widget";
 
-import * as EditableBoolean from "../state-machine/widget/editable-boolean";
-import * as EditableNumber from "../state-machine/widget/editable-number";
-import * as EditableString from "../state-machine/widget/editable-string";
-import * as Table from "../state-machine/widget/table";
-import * as ValueBoolean from "../state-machine/widget/value-boolean";
-import * as ValueNumber from "../state-machine/widget/value-number";
-import * as ValueString from "../state-machine/widget/value-string";
+import * as EditableBoolean from "../widget/editable-boolean";
+import * as EditableNumber from "../widget/editable-number";
+import * as EditableString from "../widget/editable-string";
+import * as Table from "../widget/table";
+import * as ValueBoolean from "../widget/value-boolean";
+import * as ValueNumber from "../widget/value-number";
+import * as ValueString from "../widget/value-string";
 
 
 import * as EditableBooleanImpl from "./editable-boolean";

@@ -1,4 +1,4 @@
-import * as Widget from "../widget";
+import * as Widget from "../state-machine/widget";
 import * as Editable from "./editable";
 
 export type Request = Editable.Request<number>;

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import * as Widget from "../state-machine/widget";
-import * as ValueNumber from "../state-machine/widget/value-number";
+import * as ValueNumber from "../widget/value-number";
 
 export class Component extends React.Component<ValueNumber.Props, {}>
                     implements Widget.Component<ValueNumber.Props> {

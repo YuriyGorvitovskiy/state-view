@@ -1,4 +1,4 @@
-import * as Action from "../../state-machine/action";
+import * as Action from "../../../../../src/ts/main/state-machine/action";
 import * as ChangeAttribute from "./change-attribute";
 
 export function register() {

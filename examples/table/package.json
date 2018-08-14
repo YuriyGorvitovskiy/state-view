@@ -1,5 +1,5 @@
 {
-  "name": "table",
+  "name": "example-table",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,17 +8,17 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
+  },
   "devDependencies": {
-    "awesome-typescript-loader": "^5.2.0",
+    "@types/react": "^16.4.9",
+    "@types/react-dom": "^16.0.7",
     "source-map-loader": "^0.2.3",
+    "ts-loader": "^4.4.2",
     "typescript": "^3.0.1",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0"
-  },
-  "dependencies": {
-    "@types/react": "^16.4.9",
-    "@types/react-dom": "^16.0.7",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2"
   }
 }

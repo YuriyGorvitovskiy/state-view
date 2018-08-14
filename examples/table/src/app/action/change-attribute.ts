@@ -1,7 +1,7 @@
-import * as Action from "../../state-machine/action";
-import {Patch} from "../../state-machine/patch";
-import {Field, Single} from "../../state-machine/request";
-import * as Value from "../../state-machine/widget/value";
+import * as Action from "../../../../../src/ts/main/state-machine/action";
+import {Patch} from "../../../../../src/ts/main/state-machine/patch";
+import {Field, Single} from "../../../../../src/ts/main/state-machine/request";
+import * as Value from "../../../../../src/ts/main/widget/value";
 
 export const ACTION = "change-attribite";
 

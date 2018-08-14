@@ -1,4 +1,4 @@
-import * as Action from "../action";
+import * as Action from "../state-machine/action";
 
 import * as Value from "./value";
 

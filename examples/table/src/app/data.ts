@@ -1,4 +1,4 @@
-import {CACHE} from "../state-machine/cache";
+import {CACHE} from "../../../../src/ts/main/state-machine/cache";
 import {TABLE_VIEW} from "./view/items-table";
 
 export const view_table_id = "view:table";

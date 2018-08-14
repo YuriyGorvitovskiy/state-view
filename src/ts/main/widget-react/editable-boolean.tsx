@@ -3,12 +3,12 @@ import * as React from "react";
 import * as Action from "../state-machine/action";
 import * as Widget from "../state-machine/widget";
 
-import * as EditableBoolean from "../state-machine/widget/editable-boolean";
+import * as EditableBoolean from "../widget/editable-boolean";
 
 export class Component extends React.Component<EditableBoolean.Props, {}>
                     implements Widget.Component<EditableBoolean.Props> {
     render() {
-        return <span onClick={(e)=>this.onClick(e)}>{null == this.props.value ? null : this.props.value ? "✅" : "❎"}</span>;
+        return <span onClick={(e)=>this.onClick(e)}>{null == this.props.value ? null : this.props.value ? "\u2705" : "\u274E"}</span>;
     }
 
     onClick(ev: React.MouseEvent) {

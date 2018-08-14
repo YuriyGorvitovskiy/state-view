@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import * as Widget from "../state-machine/widget";
-import * as Table from "../state-machine/widget/table";
+import * as Table from "../widget/table";
 
 export class Component extends React.Component<Table.Props, {}>
                     implements Widget.Component<Table.Props> {

@@ -1,5 +1,5 @@
-import {Field, Plural, Single} from "../request";
-import * as Widget from "../widget";
+import {Field, Plural, Single} from "../state-machine/request";
+import * as Widget from "../state-machine/widget";
 
 export const WIDGET = "table";
 export function widget(props: Request): Widget.Request<Request> {
