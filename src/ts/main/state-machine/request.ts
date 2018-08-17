@@ -13,6 +13,7 @@ export function path<T>(p: string): Path<T> {
 
 export interface Request {
     $id: string | Path<string>;
+    [key: string]: any;
 }
 
 export interface RequestArray {
