@@ -23,13 +23,13 @@ import * as ValueStringImpl from "./value-string";
 
 
 export function register() {
-    Widget.REGISTRY[EditableBoolean.WIDGET] = (prop: any) => React.createElement(EditableBooleanImpl.Component, prop);
-    Widget.REGISTRY[EditableNumber.WIDGET] = (prop: any) => React.createElement(EditableNumberImpl.Component, prop);
-    Widget.REGISTRY[EditableString.WIDGET] = (prop: any) => React.createElement(EditableStringImpl.Component, prop);
-    Widget.REGISTRY[Table.WIDGET] = (prop: any) => React.createElement(TableImpl.Component, prop);
-    Widget.REGISTRY[ValueBoolean.WIDGET] = (prop: any) => React.createElement(ValueBooleanImpl.Component, prop);
-    Widget.REGISTRY[ValueNumber.WIDGET] = (prop: any) => React.createElement(ValueNumberImpl.Component, prop);
-    Widget.REGISTRY[ValueString.WIDGET] = (prop: any) => React.createElement(ValueStringImpl.Component, prop);
+    Widget.REGISTRY[EditableBoolean.WIDGET] = (props: any) => React.createElement(EditableBooleanImpl.Component, props);
+    Widget.REGISTRY[EditableNumber.WIDGET] = (props: any) => React.createElement(EditableNumberImpl.Component, props);
+    Widget.REGISTRY[EditableString.WIDGET] = (props: any) => React.createElement(EditableStringImpl.Component, props);
+    Widget.REGISTRY[Table.WIDGET] = (props: any) => React.createElement(TableImpl.Component, props);
+    Widget.REGISTRY[ValueBoolean.WIDGET] = (props: any) => React.createElement(ValueBooleanImpl.Component, props);
+    Widget.REGISTRY[ValueNumber.WIDGET] = (props: any) => React.createElement(ValueNumberImpl.Component, props);
+    Widget.REGISTRY[ValueString.WIDGET] = (props: any) => React.createElement(ValueStringImpl.Component, props);
 }
 
 export function start() {
