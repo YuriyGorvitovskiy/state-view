@@ -8,6 +8,6 @@ import * as Test from "./test-widget";
 export class Component extends Test.Component<ValueString.Props>
                     implements Widget.Component<ValueString.Props> {
     render() {
-        return "<span>" + this.props.value + "</span>";
+        return "<str>" + this.props.value + "</str>";
     }
 };

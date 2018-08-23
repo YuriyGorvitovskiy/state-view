@@ -10,9 +10,17 @@ export function widget(props: Request): Widget.Request<Request> {
 };
 
 export interface Request {
-    items: Plural<Widget.Request<any>>;
+    items: Plural<ItemRequest>;
 }
 
 export interface Props {
-    items: Widget.Request<any>[];
+    items: ItemProps[];
+}
+
+export interface ItemRequest {
+    widget: Single<Widget.Request<any>>;
+}
+
+export interface ItemProps {
+    widget: Widget.Request<any>;
 }
