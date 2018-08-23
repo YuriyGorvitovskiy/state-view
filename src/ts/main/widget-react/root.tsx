@@ -13,9 +13,10 @@ export class Component extends React.Component<{}, State>
 
     constructor(prop: any) {
         super(prop);
-        let view = Cache.CACHE.get(Component.getParameterByName("view"));
+
+        let view = Cache.CACHE.get(Component.getParameterByName("view", "view:table"));
         let state = JSON.parse(view.json);
-        state.$id = Component.getParameterByName("id");
+        state.$id = Component.getParameterByName("id", "list:1");
         this.state = state;
     }
 
@@ -28,14 +29,15 @@ export class Component extends React.Component<{}, State>
         this.forceUpdate();
     }
 
-    static getParameterByName(name: string): string {
+    static getParameterByName(name: string, def: string): string {
         let url = window.location.href;
 
         name = name.replace(/[\[\]]/g, '\\$&');
         let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
         let results = regex.exec(url);
-        if (!results) return null;
+        if (!results) return def;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
+
     }
 };
