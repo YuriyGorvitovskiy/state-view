@@ -1,6 +1,8 @@
 import {path} from "../../../../../src/ts/main/state-machine/request";
 
 import * as ChangeAttribute from "../action/change-attribute";
+import * as Delete from "../action/delete";
+import * as Button from "../../../../../src/ts/main/widget/button";
 import * as EditableBoolean from "../../../../../src/ts/main/widget/editable-boolean";
 import * as EditableNumber from "../../../../../src/ts/main/widget/editable-number";
 import * as EditableString from "../../../../../src/ts/main/widget/editable-string";
@@ -18,6 +20,9 @@ export const TABLE_VIEW = Table.widget({
     },{
         column: "number",
         widget: ValueString.widget({value: "Number"})
+    },{
+        column: "action",
+        widget: ValueString.widget({value: "Action"})
     }],
     rows: {
         $id: path("^item:list_id"),
@@ -46,6 +51,14 @@ export const TABLE_VIEW = Table.widget({
                 edit: ChangeAttribute.request({
                     attr: "number",
                     value: null
+                })
+            })
+        },{
+            column: "action",
+            widget: Button.widget({
+                label: "X",
+                press: Delete.request({
+                    $id: null
                 })
             })
         }]

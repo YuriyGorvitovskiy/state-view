@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import * as Widget from "../state-machine/widget";
 
+import * as Button from "../widget/button";
 import * as EditableBoolean from "../widget/editable-boolean";
 import * as EditableNumber from "../widget/editable-number";
 import * as EditableString from "../widget/editable-string";
@@ -11,7 +12,7 @@ import * as ValueBoolean from "../widget/value-boolean";
 import * as ValueNumber from "../widget/value-number";
 import * as ValueString from "../widget/value-string";
 
-
+import * as ButtonImpl from "./button";
 import * as EditableBooleanImpl from "./editable-boolean";
 import * as EditableNumberImpl from "./editable-number";
 import * as EditableStringImpl from "./editable-string";
@@ -23,6 +24,7 @@ import * as ValueStringImpl from "./value-string";
 
 
 export function register() {
+    Widget.REGISTRY[Button.WIDGET] = (props: any) => React.createElement(ButtonImpl.Component, props);
     Widget.REGISTRY[EditableBoolean.WIDGET] = (props: any) => React.createElement(EditableBooleanImpl.Component, props);
     Widget.REGISTRY[EditableNumber.WIDGET] = (props: any) => React.createElement(EditableNumberImpl.Component, props);
     Widget.REGISTRY[EditableString.WIDGET] = (props: any) => React.createElement(EditableStringImpl.Component, props);
