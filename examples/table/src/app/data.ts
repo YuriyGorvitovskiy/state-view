@@ -1,7 +1,7 @@
 import {CACHE} from "../../../../src/ts/main/state-machine/cache";
-import {TABLE_VIEW} from "./view/items-table";
+import {APPLICATION} from "./view/application";
 
-export const view_table_id = "view:table";
+export const view_application_id = "view:application";
 
 export const list1_id = "list:1";
 export const list2_id = "list:2";
@@ -16,8 +16,8 @@ export const item7_id = "item:7";
 
 export function initialize() {
     CACHE.set({
-        id: view_table_id,
-        json: JSON.stringify(TABLE_VIEW)
+        id: view_application_id,
+        json: JSON.stringify(APPLICATION)
     });
     CACHE.set({
         id: list1_id,

@@ -56,7 +56,7 @@ export const TABLE_VIEW = Table.widget({
         },{
             column: "action",
             widget: Button.widget({
-                label: "X",
+                label: "\u205F\u274C", // space and red-delete cross
                 press: Delete.request({
                     $id: null
                 })

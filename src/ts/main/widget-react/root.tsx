@@ -14,7 +14,7 @@ export class Component extends React.Component<{}, State>
     constructor(prop: any) {
         super(prop);
 
-        let view = Cache.CACHE.get(Component.getParameterByName("view", "view:table"));
+        let view = Cache.CACHE.get(Component.getParameterByName("view", "view:application"));
         let state = JSON.parse(view.json);
         state.$id = Component.getParameterByName("id", "list:1");
         this.state = state;
