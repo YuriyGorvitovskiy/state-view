@@ -1,7 +1,7 @@
 import * as Action from '../../../main/state-machine/action';
 import * as Cache from '../../../main/state-machine/cache';
 import * as Patch from '../../../main/state-machine/patch'
-import * as Request from '../../../main/state-machine/request';
+import * as Req from '../../../main/state-machine/request';
 
 export const ACTION = "rename-story";
 
@@ -11,11 +11,11 @@ export interface Params  {
 }
 
 export interface Request {
-    id:  Request.Field<Request, string>;
-    name:  Request.Field<Request, string>;
+    id:  Req.Field<Request, string>;
+    name:  Req.Field<Request, string>;
 }
 
-export function request(params: Request.Single<Request>):  Action.Request<Request> {
+export function request(params: Req.Single<Request>):  Action.Request<Request> {
     return {
         $action: ACTION,
         $params: params

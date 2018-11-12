@@ -1,4 +1,4 @@
-import * as Request from '../../../main/state-machine/request';
+import * as Req from '../../../main/state-machine/request';
 
 export interface Reference  {
     $id: string
@@ -10,11 +10,11 @@ export interface Params<F extends Reference, A extends Reference>  {
 };
 
 export interface ReferenceRequest {
-    $id:  Request.Field<ReferenceRequest, string>;
+    $id:  Req.Field<ReferenceRequest, string>;
 };
 
 export interface Request<F extends ReferenceRequest, A extends ReferenceRequest> {
-    from:  Request.Single<F>;
-    after:  Request.Single<A>;
+    from:  Req.Single<F>;
+    after:  Req.Single<A>;
 }
 

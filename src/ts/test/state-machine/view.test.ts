@@ -2,13 +2,11 @@ import * as Cache from "../../main/state-machine/cache";
 import * as Request from "../../main/state-machine/request";
 import * as Widget from "../../main/state-machine/widget";
 
-import * as BulletedList from "../../main/widget/bulleted-list";
 import * as Table from "../../main/widget/table";
 import * as ValueBoolean from "../../main/widget/value-boolean";
 import * as ValueNumber from "../../main/widget/value-number";
 import * as ValueString from "../../main/widget/value-string";
 
-import * as TestBulletedList from "./widget/bulleted-list";
 import * as TestTable from "./widget/table";
 import * as TestValueBoolean from "./widget/value-boolean";
 import * as TestValueNumber from "./widget/value-number";
@@ -58,7 +56,6 @@ describe('Check View class', () => {
         string: "Third"
     });
 
-    Widget.REGISTRY[BulletedList.WIDGET] = (props: any) => new TestBulletedList.Component(props);
     Widget.REGISTRY[Table.WIDGET] = (props: any) => new TestTable.Component(props);
     Widget.REGISTRY[ValueBoolean.WIDGET] = (props: any) => new TestValueBoolean.Component(props);
     Widget.REGISTRY[ValueNumber.WIDGET] = (props: any) => new TestValueNumber.Component(props);
@@ -81,22 +78,6 @@ describe('Check View class', () => {
 
         // Verify
         expect(actual.render()).toEqual("<str>Item 1</str>");
-    });
-
-    it('list_view renders correctly', () => {
-        // Setup
-        const list_view = BulletedList.widget({
-            items: {
-                $id: Request.path("^item:list_id"),
-                widget: ValueString.widget({value: Request.path("name")})
-            }
-        });
-
-        // Execute
-        const actual = generateWidget(list1_id, list_view.$widget, list_view.$props);
-
-        // Verify
-        expect(actual.render()).toEqual("<ul><li><str>Item 1</str></li><li><str>Item 2</str></li><li><str>Item 3</str></li></ul>");
     });
 
     it('table_view renders correctly', () => {

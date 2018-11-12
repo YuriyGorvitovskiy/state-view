@@ -1,4 +1,3 @@
-import * as List from "../../../main/widget/bulleted-list";
 import * as ValueString from "../../../main/widget/value-string";
 import * as Widget from "../../../main/state-machine/widget";
 

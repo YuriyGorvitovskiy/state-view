@@ -1,7 +1,7 @@
 import * as Action from '../../../main/state-machine/action';
 import * as Cache from '../../../main/state-machine/cache';
 import * as Patch from '../../../main/state-machine/patch'
-import * as Request from '../../../main/state-machine/request';
+import * as Req from '../../../main/state-machine/request';
 import * as Drop from './drop';
 
 export const ACTION = "create-new-story-after-link";
@@ -13,10 +13,10 @@ export interface After extends Drop.Reference {
     project_id: string;
 }
 export interface AfterRequest extends Drop.ReferenceRequest {
-    action_id: Request.Field<AfterRequest, string>;
-    release_id: Request.Field<AfterRequest, string>;
-    release_ix: Request.Field<AfterRequest, number>;
-    project_id: Request.Field<AfterRequest, string>;
+    action_id: Req.Field<AfterRequest, string>;
+    release_id: Req.Field<AfterRequest, string>;
+    release_ix: Req.Field<AfterRequest, number>;
+    project_id: Req.Field<AfterRequest, string>;
 }
 
 export interface Params extends Drop.Params<Drop.Reference, After> {
@@ -24,11 +24,11 @@ export interface Params extends Drop.Params<Drop.Reference, After> {
 }
 
 export interface Request extends Drop.Request<Drop.ReferenceRequest, AfterRequest> {
-    name:  Request.Field<Request, string>;
+    name:  Req.Field<Request, string>;
 }
 
 
-export function request(params: Request.Single<Request>):  Action.Request<Request> {
+export function request(params: Req.Single<Request>):  Action.Request<Request> {
     return {
         $action: ACTION,
         $params: params
