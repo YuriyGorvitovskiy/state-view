@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "upgrade-dep": "npx npm-check-updates -u && npm install",
     "build": "./node_modules/.bin/webpack"
   },
   "author": "",

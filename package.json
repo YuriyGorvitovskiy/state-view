@@ -4,6 +4,7 @@
   "description": "Portable cache-state-action cycle processor",
   "main": "index.js",
   "scripts": {
+    "upgrade-dep": "npx npm-check-updates -u && npm install",
     "test": "jest"
   },
   "repository": {
